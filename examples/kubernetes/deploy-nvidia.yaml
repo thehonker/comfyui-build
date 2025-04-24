@@ -1,0 +1,88 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: comfyui
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: comfyui
+  namespace: comfyui
+spec:
+  serviceName: comfyui
+  replicas: 2
+  selector:
+    matchLabels:
+      app: comfyui
+  template:
+    metadata:
+      labels:
+        app: comfyui
+    spec:
+      runtimeClassName: nvidia-cdi
+      containers:
+      - name: fileeditor
+        image: alpine:latest
+        command:
+        - /bin/sh
+        - -c
+        - tail -f /dev/null
+        volumeMounts:
+        - mountPath: "/comfyui-tmpfs"
+          name: comfyui-tmpfs
+        - mountPath: "/comfyui-data"
+          name: application-data
+        - mountPath: "/models"
+          name: aimodels-image-generation
+      - name: comfyui
+        env:
+        - name: NVIDIA_VISIBLE_DEVICES
+          value: all
+        - name: NVIDIA_DRIVER_CAPABILITIES
+          value: compute,utility
+        - name: POD_ORDINAL
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels["apps.kubernetes.io/pod-index"]
+        image: "ghcr.io/thehonker/comfyui:cu128-latest"
+        imagePullPolicy: Always
+        command:
+        - /bin/bash
+        - -c
+        - >-
+          /home/comfyui/entrypoint.sh
+          --base-directory /comfyui-data
+          --cuda-device $POD_ORDINAL
+          --cuda-malloc
+          --disable-auto-launch
+          --disable-smart-memory
+          --enable-compress-response-body
+          --listen 0.0.0.0
+          --log-stdout true
+          --multi-user
+          --port 8188
+          --preview-method auto
+          --temp-directory /comfyui-tmpfs
+        ports:
+          - name: http
+            protocol: TCP
+            containerPort: 8188
+        volumeMounts:
+        - mountPath: "/comfyui-tmpfs"
+          name: comfyui-tmpfs
+        - mountPath: "/comfyui-data"
+          name: application-data
+        - mountPath: "/models"
+          name: aimodels-image-generation
+      volumes:
+        - name: comfyui-tmpfs
+          emptyDir:
+            medium: Memory
+        - name: application-data
+          persistentVolumeClaim:
+            claimName: application-data
+        - name: aimodels-image-generation
+          persistentVolumeClaim:
+            claimName: aimodels-image-generation
