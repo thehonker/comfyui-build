@@ -6,20 +6,19 @@ metadata:
 
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
-  name: comfyui
+  name: comfyui-gpu0
   namespace: comfyui
 spec:
-  serviceName: comfyui
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: comfyui
+      app: comfyui-gpu0
   template:
     metadata:
       labels:
-        app: comfyui
+        app: comfyui-gpu0
     spec:
       runtimeClassName: nvidia-cdi
       containers:
@@ -42,10 +41,6 @@ spec:
           value: all
         - name: NVIDIA_DRIVER_CAPABILITIES
           value: compute,utility
-        - name: POD_ORDINAL
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.labels["apps.kubernetes.io/pod-index"]
         image: "ghcr.io/thehonker/comfyui:cu128-latest"
         imagePullPolicy: Always
         command:
@@ -54,7 +49,7 @@ spec:
         - >-
           /home/comfyui/entrypoint.sh
           --base-directory /comfyui-data
-          --cuda-device $POD_ORDINAL
+          --cuda-device 0
           --cuda-malloc
           --disable-auto-launch
           --disable-smart-memory
