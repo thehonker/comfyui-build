@@ -6,21 +6,38 @@ metadata:
 
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: comfyui-gpu0
+  name: comfyui
   namespace: comfyui
 spec:
-  replicas: 1
+  serviceName: comfyui
+  # Change to match the number of gpus you have
+  replicas: 2
   selector:
     matchLabels:
-      app: comfyui-gpu0
+      app: comfyui
   template:
     metadata:
       labels:
-        app: comfyui-gpu0
+        app: comfyui
     spec:
       runtimeClassName: nvidia-cdi
+      initContainers:
+      - name: create-data-dirs
+        image: alpine:latest
+        command:
+        - /bin/sh
+        - -c
+        - |-
+          mkdir -pv /comfyui-data/custom_nodes;
+        volumeMounts:
+        - mountPath: "/comfyui-tmpfs"
+          name: comfyui-tmpfs
+        - mountPath: "/comfyui-data"
+          name: application-data
+        - mountPath: "/models"
+          name: aimodels-image-generation
       containers:
       - name: fileeditor
         image: alpine:latest
@@ -37,11 +54,16 @@ spec:
           name: aimodels-image-generation
       - name: comfyui
         env:
+        # Modify as necessary
         - name: NVIDIA_VISIBLE_DEVICES
           value: all
         - name: NVIDIA_DRIVER_CAPABILITIES
           value: compute,utility
-        image: "ghcr.io/thehonker/comfyui:cu128-latest"
+        - name: POD_ORDINAL
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        image: "ghcr.io/thehonker/comfyui:cu126-latest"
         imagePullPolicy: Always
         command:
         - /bin/bash
@@ -49,7 +71,7 @@ spec:
         - >-
           /home/comfyui/entrypoint.sh
           --base-directory /comfyui-data
-          --cuda-device 0
+          --cuda-device "${POD_ORDINAL:8}"
           --cuda-malloc
           --disable-auto-launch
           --disable-smart-memory
