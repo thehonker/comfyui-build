@@ -42,9 +42,9 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           tags: |
-            type=raw,value=latest,priority=1000,prefix=nvidia-
-            type=schedule,enable=true,priority=900,pattern={{date 'YYYYMMDD'}},prefix=nvidia-
-            type=raw,value=${{ env.LAST_COMMIT_HASH }},priority=800,prefix=nvidia-
+            type=raw,value=latest,priority=1000,prefix=cu128-
+            type=schedule,enable=true,priority=900,pattern={{date 'YYYYMMDD'}},prefix=cu128-
+            type=raw,value=${{ env.LAST_COMMIT_HASH }},priority=800,prefix=cu128-
           images: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
