@@ -1,4 +1,4 @@
-name: comfyui image - master branch - nightly
+name: comfyui image - master branch - nightly - cu126
 on:
   push:
     branches:
@@ -42,9 +42,9 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           tags: |
-            type=raw,value=latest,priority=1000,prefix=cu128-
-            type=schedule,enable=true,priority=900,pattern={{date 'YYYYMMDD'}},prefix=cu128-
-            type=raw,value=${{ env.LAST_COMMIT_HASH }},priority=800,prefix=cu128-
+            type=raw,value=latest,priority=1000,prefix=cu126-
+            type=schedule,enable=true,priority=900,pattern={{date 'YYYYMMDD'}},prefix=cu126-
+            type=raw,value=${{ env.LAST_COMMIT_HASH }},priority=800,prefix=cu126-
           images: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
@@ -52,7 +52,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: src/
-          file: src/Containerfile
+          file: src/Containerfile.cu126
           platforms: linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
