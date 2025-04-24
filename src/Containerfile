@@ -42,6 +42,8 @@ WORKDIR /home/comfyui/comfyui
 
 RUN set -exu \
   && export DEBIAN_FRONTEND=noninteractive \
+  && python -m venv /home/comfyui/comfyui \
+  && source /home/comfyui/comfyui/bin/activate \
   && pip install --pre \
       torch \
       torchvision \
