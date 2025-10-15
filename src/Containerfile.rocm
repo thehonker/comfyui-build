@@ -24,10 +24,10 @@ RUN set -exu \
 
 RUN set -exu \
   && addgroup \
-    --gid 1000 \
+    --gid 1101 \
     comfyui \
   && adduser \
-    --uid 1000 \
+    --uid 1101 \
     --ingroup comfyui \
     --disabled-password \
     --gecos comfyui \
