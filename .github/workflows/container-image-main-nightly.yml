@@ -74,7 +74,7 @@ jobs:
 
       - name: Clone comfyui repo, apply any patches
         run: |
-          git clone --depth=1 --single-branch --branch main https://github.com/comfyanonymous/ComfyUI.git "${{ github.workspace }}/src/comfyui"
+          git clone --depth=1 --single-branch --branch master https://github.com/comfyanonymous/ComfyUI.git "${{ github.workspace }}/src/comfyui"
           echo "LAST_COMMIT_SHORTHASH=$(cd "${{ github.workspace }}/src/comfyui" && git --no-pager log -n 1 --pretty=format:"%h")" >> "$GITHUB_ENV"
           cd "${{ github.workspace }}/src/comfyui"
           for patch in "${{ github.workspace }}/patches/${{ matrix.torch-backend }}/"*.patch; do
