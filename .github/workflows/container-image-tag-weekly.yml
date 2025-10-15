@@ -77,6 +77,7 @@ jobs:
           git clone --depth=20 --single-branch --branch main https://github.com/comfyanonymous/ComfyUI.git "${{ github.workspace }}/src/comfyui"
           LAST_TAG="$(cd "${{ github.workspace }}/src/comfyui" && git describe --tags --abbrev=0)"
           echo "${LAST_TAG}" >> "$GITHUB_ENV"
+          cd "${{ github.workspace }}/src/comfyui"
           git checkout "${LAST_TAG}"
           for patch in "${{ github.workspace }}/patches/${{ matrix.torch-backend }}/"*.patch; do
             if test -f "$patch"; then
