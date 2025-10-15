@@ -2,11 +2,11 @@
 
 echo "entrypoint.sh start"
 
-echo "activating venv at ${HOME}/comfyui"
+echo "Ensuring ${HOME} exists, cd to it"
+cd "${HOME}" || exit 1
 
-cd "${HOME}/comfyui/" || exit 1
-
-. "${HOME}/comfyui/bin/activate"
+echo "Activate venv at ${HOME}/.venv"
+source "${HOME}/.venv/bin/activate"
 
 echo "launching comfyui with args: $@"
 
