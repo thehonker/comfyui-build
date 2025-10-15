@@ -75,7 +75,7 @@ jobs:
       - name: Clone comfyui repo, apply any patches
         run: |
           git clone --depth=20 --single-branch --branch main https://github.com/comfyanonymous/ComfyUI.git "${{ github.workspace }}/src/comfyui"
-          LAST_TAG="$(cd "${{ github.workspace }}/src/invokeai" && git describe --tags --abbrev=0)"
+          LAST_TAG="$(cd "${{ github.workspace }}/src/comfyui" && git describe --tags --abbrev=0)"
           echo "${LAST_TAG}" >> "$GITHUB_ENV"
           git checkout "${LAST_TAG}"
           for patch in "${{ github.workspace }}/patches/${{ matrix.torch-backend }}/"*.patch; do
