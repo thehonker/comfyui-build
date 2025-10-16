@@ -47,9 +47,6 @@ pip install \
     torch \
     torchvision \
     torchaudio \
-  --python 3.12 \
-  --python-preference only-managed \
-  --force-reinstall \
   --index-url "${TORCH_INDEX_URL}"
 
 pip install -r $HOME/comfyui/requirements.txt
