@@ -61,7 +61,6 @@ $HOME/.local/bin/uv \
     torchaudio \
   --python 3.12 \
   --python-preference only-managed \
-  --torch-backend $GPU_DRIVER \
   --force-reinstall \
   --index-url "${TORCH_INDEX_URL}"
 
