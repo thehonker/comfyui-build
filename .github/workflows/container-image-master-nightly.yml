@@ -1,4 +1,4 @@
-name: ComfyUI Image Build - Main Branch - Nightly
+name: ComfyUI Image Build - Master Branch - Nightly
 on:
   push:
     branches:
@@ -27,6 +27,7 @@ jobs:
         - rocm7.0
         - cu126
         - cu128
+        - cu130
     runs-on: ubuntu-latest
     name: ${{ matrix.torch-backend }}
     timeout-minutes: 120
