@@ -37,23 +37,11 @@ case $GPU_DRIVER in
     ;;
 esac
 
-pipx install uv
-
-$HOME/.local/bin/uv venv --relocatable --prompt invoke --python 3.12 --python-preference only-managed $HOME/.venv
+python3 -m venv --relocatable --prompt comfyui --python 3.12 --python-preference only-managed $HOME/.venv
 
 . .venv/bin/activate
 
-$HOME/.local/bin/uv \
-  pip install \
-  $TORCH_PIP_PRE \
-  --upgrade \
-    setuptools \
-  --python 3.12 \
-  --python-preference only-managed \
-  --force-reinstall
-
-$HOME/.local/bin/uv \
-  pip install \
+pip install \
   $TORCH_PIP_PRE \
   --upgrade \
     torch \
@@ -64,6 +52,6 @@ $HOME/.local/bin/uv \
   --force-reinstall \
   --index-url "${TORCH_INDEX_URL}"
 
-$HOME/.local/bin/uv pip install -r $HOME/comfyui/requirements.txt
+pip install -r $HOME/comfyui/requirements.txt
 
 deactivate
