@@ -39,17 +39,21 @@ case $GPU_DRIVER in
     ;;
 esac
 
-python3 -m venv --prompt comfyui $HOME/.venv
+pipx install uv
+
+export PATH="$HOME/.local/bin:$PATH"
+
+uv venv --relocatable --prompt comfyui --python 3.12 --python-preference only-managed .venv
 
 . $HOME/.venv/bin/activate
 
-python3 -m pip install \
+uv pip install \
   $TORCH_PIP_PRE \
   --index-url "${TORCH_INDEX_URL}" \
   torch \
   torchvision \
   torchaudio
 
-python3 -m pip install -r $HOME/comfyui/requirements.txt
+uv pip install -r $HOME/comfyui/requirements.txt
 
 deactivate
