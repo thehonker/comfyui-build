@@ -66,4 +66,5 @@ $HOME/.local/bin/uv \
   --index-url "${TORCH_INDEX_URL}"
 
 $HOME/.local/bin/uv pip install -r $HOME/comfyui/requirements.txt
+
 deactivate
