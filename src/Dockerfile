@@ -40,21 +40,15 @@ RUN set -exu \
     comfyui
 
 # comfyui repo assumed to have been cloned for us
+COPY ./entrypoint.sh /entrypoint.sh
 COPY --chown=comfyui:comfyui ./comfyui /home/comfyui/comfyui
-COPY ./entrypoint.sh /home/comfyui/entrypoint.sh
+COPY --chown=comfyui:comfyui ./install-comfyui.sh /install-comfyui.sh
 
 USER comfyui
 WORKDIR /home/comfyui
 
 RUN set -exu \
-  && export DEBIAN_FRONTEND=noninteractive \
-  && pipx install uv \
-  && $HOME/.local/bin/uv venv --relocatable --prompt invoke --python 3.12 --python-preference only-managed .venv \
-  && source .venv/bin/activate \
-  && $HOME/.local/bin/uv pip install --upgrade torch torchvision torchaudio --python 3.12 --python-preference only-managed --torch-backend=$GPU_DRIVER --force-reinstall \
-  && $HOME/.local/bin/uv pip install -r $HOME/comfyui/requirements.txt \
-  && deactivate \
-  && rm -rf $HOME/invokeai
+  && /bin/bash /install-comfyui.sh $GPU_DRIVER
 
 ENTRYPOINT ["/bin/bash"]
-CMD ["/home/comfyui/entrypoint.sh"]
+CMD ["/entrypoint.sh"]
