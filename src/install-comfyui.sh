@@ -2,6 +2,8 @@
 
 set -exu
 
+cd $HOME || exit 1
+
 export GPU_DRIVER=$1
 
 export DEBIAN_FRONTEND=noninteractive
@@ -39,15 +41,14 @@ esac
 
 python3 -m venv --prompt comfyui $HOME/.venv
 
-. .venv/bin/activate
+. $HOME/.venv/bin/activate
 
 pip install \
   $TORCH_PIP_PRE \
-  --upgrade \
-    torch \
-    torchvision \
-    torchaudio \
-  --index-url "${TORCH_INDEX_URL}"
+  --index-url "${TORCH_INDEX_URL}" \
+  torch \
+  torchvision \
+  torchaudio
 
 pip install -r $HOME/comfyui/requirements.txt
 
