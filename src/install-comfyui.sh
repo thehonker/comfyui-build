@@ -43,13 +43,13 @@ python3 -m venv --prompt comfyui $HOME/.venv
 
 . $HOME/.venv/bin/activate
 
-pip install \
+python3 -m pip install \
   $TORCH_PIP_PRE \
   --index-url "${TORCH_INDEX_URL}" \
   torch \
   torchvision \
   torchaudio
 
-pip install -r $HOME/comfyui/requirements.txt
+python3 -m pip install -r $HOME/comfyui/requirements.txt
 
 deactivate
