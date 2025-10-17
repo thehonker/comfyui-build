@@ -1,0 +1,56 @@
+# syntax=docker/dockerfile:1
+
+FROM docker.io/rocm/dev-ubuntu-24.04:6.3
+
+ARG GPU_DRIVER
+
+ENV GPU_DRIVER=$GPU_DRIVER
+
+USER root
+
+RUN set -exu \
+  && export DEBIAN_FRONTEND=noninteractive \
+  && apt-get -yq update \
+  && apt-get -yq install \
+    bash \
+    curl \
+    nano \
+    wget \
+    git \
+    python3 \
+    python3-venv \
+    python3-pip \
+    python3-setuptools \
+    python3-wheel \
+    pipx \
+    libgl1 \
+    libglib2.0-0 \
+    libtcmalloc-minimal4 \
+    bc \
+    pciutils \
+  && apt-get -yq clean
+
+RUN set -exu \
+  && addgroup \
+    --gid 1101 \
+    comfyui \
+  && adduser \
+    --uid 1101 \
+    --ingroup comfyui \
+    --disabled-password \
+    --gecos comfyui \
+    comfyui
+
+# comfyui repo assumed to have been cloned for us
+COPY ./entrypoint.sh /entrypoint.sh
+COPY --chown=comfyui:comfyui ./comfyui /home/comfyui/comfyui
+COPY --chown=comfyui:comfyui ./install-comfyui.sh /install-comfyui.sh
+
+USER comfyui
+WORKDIR /home/comfyui
+
+RUN set -exu \
+  && /bin/bash /install-comfyui.sh $GPU_DRIVER
+
+ENTRYPOINT ["/bin/bash"]
+CMD ["/entrypoint.sh"]
