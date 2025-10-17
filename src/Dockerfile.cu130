@@ -39,7 +39,9 @@ RUN set -exu \
     --ingroup comfyui \
     --disabled-password \
     --gecos comfyui \
-    comfyui
+    comfyui \
+  && usermod -a -G render comfyui \
+  && usermod -a -G video comfyui
 
 # comfyui repo assumed to have been cloned for us
 COPY ./entrypoint.sh /entrypoint.sh
