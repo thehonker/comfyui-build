@@ -1,4 +1,4 @@
-name: ComfyUI Docker Image Build
+name: ComfyUI
 on:
   workflow_call:
     inputs:

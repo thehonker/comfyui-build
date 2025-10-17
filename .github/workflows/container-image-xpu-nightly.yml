@@ -1,4 +1,4 @@
-name: ComfyUI Docker Image Build - XPU - Nightly
+name: ComfyUI - XPU - Nightly
 on:
   push:
     branches:

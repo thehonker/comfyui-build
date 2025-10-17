@@ -1,4 +1,4 @@
-name: ComfyUI Docker Image Build - CUDA 12.6.x - Nightly
+name: ComfyUI - CUDA 12.6.x - Nightly
 on:
   push:
     branches:

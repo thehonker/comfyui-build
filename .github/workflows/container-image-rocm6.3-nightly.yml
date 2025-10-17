@@ -1,4 +1,4 @@
-name: ComfyUI Docker Image Build - ROCM 6.3 - Nightly
+name: ComfyUI - ROCM 6.3 - Nightly
 on:
   push:
     branches:

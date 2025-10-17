@@ -1,4 +1,4 @@
-name: ComfyUI Docker Image Build - ROCM 6.3 - Stable
+name: ComfyUI - ROCM 6.3 - Stable
 on:
   push:
     branches:

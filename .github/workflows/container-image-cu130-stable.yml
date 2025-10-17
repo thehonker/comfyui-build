@@ -1,4 +1,4 @@
-name: ComfyUI Docker Image Build - CUDA 13.0.x - Stable
+name: ComfyUI - CUDA 13.0.x - Stable
 on:
   push:
     branches:

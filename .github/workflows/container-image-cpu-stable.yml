@@ -1,4 +1,4 @@
-name: ComfyUI Docker Image Build - CPU - Stable
+name: ComfyUI - CPU - Stable
 on:
   push:
     branches:

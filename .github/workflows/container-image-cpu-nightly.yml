@@ -1,4 +1,4 @@
-name: ComfyUI Docker Image Build - CPU - Nightly
+name: ComfyUI - CPU - Nightly
 on:
   push:
     branches:
