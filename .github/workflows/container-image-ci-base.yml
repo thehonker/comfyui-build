@@ -17,13 +17,15 @@ jobs:
   build-and-push:
     runs-on: self-hosted
     name: ${{ inputs.gpu-driver }}
-    timeout-minutes: 120
+    timeout-minutes: 240
     permissions:
-      contents: read
+      contents: write
       packages: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -79,9 +81,32 @@ jobs:
           source: .
           push: true
           files: |
-            "./docker-bake.hcl"
+            "./src/docker-bake.hcl"
             cwd://${{ steps.meta.outputs.bake-file }}
           targets: build
           set: |
-            build.args.GPU_DRIVER=${{ inputs.gpu-driver }}
             build.dockerfile=Dockerfile.${{ inputs.gpu-driver }}
+
+      - name: Update README with last built ref
+        run: |
+          README="README.md"
+          DRIVER="${{ inputs.gpu-driver }}"
+
+          # Get the full commit hash from the shallow clone for the nightly section
+          FULL_HASH="$(cd '${{ github.workspace }}/src/comfyui' && git rev-parse HEAD)"
+          SHORT_HASH="$(cd '${{ github.workspace }}/src/comfyui' && git rev-parse --short HEAD)"
+          BUILD_DATE="$(date -u +%Y-%m-%d)"
+
+          if [[ "${{ inputs.build-type }}" == "tag" ]]; then
+            # Update stable section: replace the line starting with "Stable:"
+            sed -i "/^Stable: /c\\Stable: \`${GIT_REF}\` (${BUILD_DATE})" "$README"
+          else
+            # Update nightly section: replace the line starting with "Nightly:"
+            sed -i "/^Nightly: /c\\Nightly: [\`${SHORT_HASH}\`](https://github.com/comfyanonymous/ComfyUI/commit/${FULL_HASH}) (${BUILD_DATE})" "$README"
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add "$README"
+          git diff --cached --quiet || git commit -m "Update README: ${DRIVER} ${BUILD_DATE} (${{ inputs.build-type }})"
+          git push

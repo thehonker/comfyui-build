@@ -10,12 +10,12 @@ on:
 
 concurrency:
   group: "comfyui-weekly-rocm63"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build-and-push:
     permissions:
-      contents: read
+      contents: write
       packages: write
     uses: ./.github/workflows/container-image-ci-base.yml
     with:

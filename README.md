@@ -1,57 +1,80 @@
 # comfyui-containerized
 
-thehonker's builds of comfyui
+Containerized builds of [ComfyUI](https://github.com/comfyanonymous/ComfyUI) for AMD ROCm 6.3.
 
-## Usage
+Images are built from the `rocm/dev-ubuntu-24.04:6.3` base, with PyTorch ROCm wheels installed via `uv`. ComfyUI runs inside a Python 3.12 venv under an unprivileged `comfyui` user (uid/gid 1101, member of `render` and `video` groups).
 
-### Image
+## Images
 
-#### Latest nightly build
+### Nightly
 
-[![ComfyUI - CPU - Nightly](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-cpu-nightly.yml/badge.svg)](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-cpu-nightly.yml) \
-`ghcr.io/thehonker/comfyui:cpu-latest`
+Built daily from the ComfyUI `master` branch.
 
-[![ComfyUI - CUDA 12.6.x - Nightly](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-cu126-nightly.yml/badge.svg)](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-cu126-nightly.yml) \
-`ghcr.io/thehonker/comfyui:cu126-latest`
+[![ComfyUI - ROCm 6.3 - Nightly](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-rocm6.3-nightly.yml/badge.svg)](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-rocm6.3-nightly.yml)
 
-[![ComfyUI - CUDA 12.8.x - Nightly](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-cu128-nightly.yml/badge.svg)](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-cu128-nightly.yml) \
-`ghcr.io/thehonker/comfyui:cu128-latest`
+```
+ghcr.io/thehonker/comfyui:rocm6.3-latest
+```
 
-[![ComfyUI - CUDA 13.0.x - Nightly](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-cu130-nightly.yml/badge.svg)](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-cu130-nightly.yml) \
-`ghcr.io/thehonker/comfyui:cu130-latest`
+Nightly: _not yet built_
 
-[![ComfyUI - ROCM 6.3 - Nightly](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-rocm6.3-nightly.yml/badge.svg)](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-rocm6.3-nightly.yml) \
-`ghcr.io/thehonker/comfyui:rocm6.3-latest`
+### Stable
 
-[![ComfyUI - XPU - Nightly](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-xpu-nightly.yml/badge.svg)](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-xpu-nightly.yml) \
-`ghcr.io/thehonker/comfyui:xpu-latest`
+Built weekly from the latest upstream git tag.
 
-#### Upstream Git Tags
+[![ComfyUI - ROCm 6.3 - Stable](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-rocm6.3-stable.yml/badge.svg)](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-rocm6.3-stable.yml)
 
-[![ComfyUI - CPU - Stable](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-cpu-stable.yml/badge.svg)](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-cpu-stable.yml) \
-`ghcr.io/thehonker/comfyui:cpu-stable`
+```
+ghcr.io/thehonker/comfyui:rocm6.3-stable
+```
 
-[![ComfyUI - CUDA 12.6.x - Stable](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-cu126-stable.yml/badge.svg)](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-cu126-stable.yml) \
-`ghcr.io/thehonker/comfyui:cu126-stable`
+Stable: _not yet built_
 
-[![ComfyUI - CUDA 12.8.x - Stable](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-cu128-stable.yml/badge.svg)](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-cu128-stable.yml) \
-`ghcr.io/thehonker/comfyui:cu128-stable`
+### Tags
 
-[![ComfyUI - CUDA 13.0.x - Stable](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-cu130-stable.yml/badge.svg)](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-cu130-stable.yml) \
-`ghcr.io/thehonker/comfyui:cu130-stable`
+Each build also gets a datestamp tag (e.g. `rocm6.3-20260608`) and a ref tag (e.g. `rocm6.3-a3f7c2d` for nightlies, `rocm6.3-v0.2.4` for stable).
 
-[![ComfyUI - ROCM 6.3 - Stable](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-rocm6.3-stable.yml/badge.svg)](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-rocm6.3-stable.yml) \
-`ghcr.io/thehonker/comfyui:rocm6.3-stable`
+## Running
 
-[![ComfyUI - XPU - Stable](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-xpu-stable.yml/badge.svg)](https://github.com/thehonker/comfyui-build/actions/workflows/container-image-xpu-stable.yml) \
-`ghcr.io/thehonker/comfyui:xpu-stable`
+```bash
+docker run --device /dev/kfd --device /dev/dri \
+  --group-add render --group-add video \
+  -p 8188:8188 \
+  -v /path/to/models:/home/comfyui/comfyui/models:ro \
+  -v /path/to/output:/home/comfyui/comfyui/output \
+  ghcr.io/thehonker/comfyui:rocm6.3-latest
+```
 
-### Storage
+All arguments passed to `docker run` after the image name are forwarded to ComfyUI. All environment variables are passed through.
 
-We do not set any configuration envvars ourselves. \
-We do not request any docker volumes ourselves. \
-Mount storage to where you need it.
+### Volumes
 
-### Configuration
+| Path | Purpose |
+|------|---------|
+| `/home/comfyui/comfyui/models` | Model checkpoints, VAEs, LoRAs, etc. |
+| `/home/comfyui/comfyui/output` | Generated images |
+| `/home/comfyui/comfyui/custom_nodes` | Custom nodes |
 
-All args to `/entrypoint.sh` are passed to `comfyui`, as are all envvars.
+No volumes or envvars are set by the image — mount what you need.
+
+### Udev
+
+If your host doesn't already grant group access to `/dev/kfd` and `/dev/dri`, install the provided udev rule:
+
+```
+sudo cp deploy/udev/90-amdgpu.rules /etc/udev/rules.d/
+sudo udevadm control --reload-rules && sudo udevadm trigger
+```
+
+This sets `MODE="0666"` on AMD GPU devices so the container's `render`/`video` groups can access them.
+
+## Patches
+
+Drop `*.patch` files into `patches/rocm6.3/` and they'll be automatically applied to the ComfyUI source before build. Patches are applied with `git apply` in order.
+
+## Building locally
+
+```bash
+git clone https://github.com/comfyanonymous/ComfyUI.git src/comfyui
+docker build -t comfyui:local -f src/Dockerfile.rocm6.3 src/
+```

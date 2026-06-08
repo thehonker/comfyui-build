@@ -1,13 +1,11 @@
 #!/bin/bash
-
-echo "entrypoint.sh start"
-
-echo "Ensuring ${HOME} exists, cd to it"
-cd "${HOME}" || exit 1
+set -eu
 
 echo "Activate venv at ${HOME}/.venv"
-source "${HOME}/.venv/bin/activate"
+cd "${HOME}" || exit 1
+. "${HOME}/.venv/bin/activate"
 
-echo "launching comfyui: \"exec python3 ${HOME}/comfyui/main.py ${@}\""
+echo "launching comfyui with:"
+echo "exec python3 ${HOME}/comfyui/main.py ${*}"
 
 exec python3 "${HOME}/comfyui/main.py" "${@}"
