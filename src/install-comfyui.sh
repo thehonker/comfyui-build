@@ -35,4 +35,6 @@ uv pip install \
 
 uv pip install -r $HOME/comfyui/requirements.txt
 
+uv pip install -r $HOME/comfyui/manager_requirements.txt
+
 deactivate
