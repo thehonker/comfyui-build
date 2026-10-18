@@ -28,7 +28,7 @@ Built weekly from the latest upstream git tag.
 ghcr.io/thehonker/comfyui:rocm6.3-stable
 ```
 
-Stable: `v0.39.0` (2026-10-11)
+Stable: `v0.41.0` (2026-10-18)
 
 ### Tags
 
