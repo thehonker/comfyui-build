@@ -16,7 +16,7 @@ Built daily from the ComfyUI `master` branch.
 ghcr.io/thehonker/comfyui:rocm6.3-latest
 ```
 
-Nightly: [`4a4b340`](https://github.com/comfyanonymous/ComfyUI/commit/4a4b3409792d499cc36626d76a24fe425f40b5e7) (2026-11-26)
+Nightly: [`7c78b56`](https://github.com/comfyanonymous/ComfyUI/commit/7c78b5641ab2d6cb7f7766a183a8a43a59de0a8b) (2026-11-27)
 
 ### Stable
 
